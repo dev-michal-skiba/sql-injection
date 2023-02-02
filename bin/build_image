@@ -1,0 +1,1 @@
+docker build ./ --tag sql_injection_backend

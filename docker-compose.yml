@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  sql_injection_db:
+    image: postgres:15.1
+    container_name: sql_injection_db
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+  sql_injection_backend:
+    image: sql_injection_backend
+    container_name: sql_injection_backend
+    volumes:
+      - ./sql_injection:/code
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-insecure-secret-key}
+      - DEBUG=${DEBUG:-true}
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=${POSTGRES_HOST:-sql_injection_db}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+    ports:
+      - '8000:8000'
+    command: bash -c 'python manage.py migrate &&
+                      python manage.py runserver 0.0.0.0:8000'
+    depends_on:
+      sql_injection_db:
+        condition: service_healthy

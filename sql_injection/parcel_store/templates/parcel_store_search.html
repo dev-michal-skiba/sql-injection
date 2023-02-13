@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <title>SQL Injection Demo</title>
+</head>
+<body>
+    <div class="main-container">
+        <h1>Search for parcel store by address</h1>
+        <div>
+            <form action="" method="GET">
+                <div class="form-container">
+                    <p>Choose Django method for "search" query</p>
+                    <div>
+                        <input type="radio" id="orm" name="search-method-key" value="orm">
+                        <label for="orm">ORM method (secure)</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="manager-raw-secure" name="search-method-key" value="manager_raw_secure">
+                        <label for="orm">Manager raw method (secure)</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="manager-raw-insecure" name="search-method-key" value="manager_raw_insecure">
+                        <label for="orm">Manager raw method (insecure)</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="direct-sql-secure" name="search-method-key" value="direct_sql_secure">
+                        <label for="orm">Direct SQL method (secure)</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="direct-sql-insecure" name="search-method-key" value="direct_sql_insecure">
+                        <label for="orm">Direct SQL method (insecure)</label>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <input id="address-search-phrase" type="text" name="address-search-phrase" placeholder="Search for parcel store...">
+                    <button id="submit-button" type="submit">Search</button>
+                    <button id="clear-button">Clear</button>
+                </div>
+            </form>
+
+
+        </div>
+        {% for parcel_store in parcel_stores %}
+            <div class="parcel-store-container">
+                <p>{{ parcel_store.1 }}</p>
+                <p>{{ parcel_store.2 }}</p>
+                <p>{{ parcel_store.3 }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        addEventListener("load", (event) => {
+            // Add listener on load to check proper radio button
+            let searchMethodKey = localStorage.getItem("searchMethodKey");
+            if (searchMethodKey == null) {
+                searchMethodKey = "orm"
+            }
+            let radioButtonElement = document.getElementById(searchMethodKey)
+            if (radioButtonElement == null) {
+                radioButtonElement = document.getElementById("orm")
+            }
+            radioButtonElement.checked = true;
+
+            // Add listener on load to set preserved search text
+            let addressSearchPhrase = localStorage.getItem("addressSearchPhrase");
+            if (addressSearchPhrase == null) {
+                addressSearchPhrase = ""
+            }
+            document.getElementById("address-search-phrase").value = addressSearchPhrase
+        });
+
+        // Add listeners to store info in local storage about checked radio button
+        let searchMethodKeyRadioButtons = document.getElementsByName("search-method-key");
+        for (let i = 0; i < searchMethodKeyRadioButtons.length; i++) {
+            searchMethodKeyRadioButtons[i].addEventListener("change", (event) => {
+                localStorage.setItem("searchMethodKey", event.target.id);
+            });
+        }
+
+        // Add listener to store info in local storage about search text
+        document.getElementById("address-search-phrase").addEventListener('change', (event) => {
+            localStorage.setItem("addressSearchPhrase", event.target.value);
+        });
+
+        // Add listener to clear info in local storage about search text
+        document.getElementById("clear-button").addEventListener('click', (event) => {
+            localStorage.setItem("addressSearchPhrase", "");
+        });
+    </script>
+</body>
+</html>

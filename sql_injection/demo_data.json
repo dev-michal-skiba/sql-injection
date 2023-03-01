@@ -1,0 +1,65 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$HNPdj36bn3xdRtig3ZOBvF$lavDMIRLCLwmdW2MKzJSEb3GcG6brCmr/dzoxQy9ic8=",
+      "last_login": "2023-02-13T20:11:56.247Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "admin@example.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-02-13T20:11:50.282Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "parcel_store.parcelstore",
+    "pk": 1,
+    "fields": {
+      "name": "Parcel Store in \"Złote Tarasy\"",
+      "address": "Gajowa 1, 00-001 Warszawa, Polska",
+      "opening_hours": "8:00-18:00"
+    }
+  },
+  {
+    "model": "parcel_store.parcelstore",
+    "pk": 2,
+    "fields": {
+      "name": "Parcel Store in \"Arkady\"",
+      "address": "Gajowa 1, 50-540 Wrocław, Polska",
+      "opening_hours": "7:00-15:00"
+    }
+  },
+  {
+    "model": "parcel_store.parcelstore",
+    "pk": 3,
+    "fields": {
+      "name": "Parcel Store in \"Pasaż Grunwaldzki\"",
+      "address": "Kwiecista 1, 50-549 Wrocław, Polska",
+      "opening_hours": "6:00-22:00"
+    }
+  },
+  {
+    "model": "parcel_store.parcelstore",
+    "pk": 4,
+    "fields": {
+      "name": "Żabka on Main Railway Station",
+      "address": "Sucha 5, 50-678 Wrocław, Polska",
+      "opening_hours": "6:00-23:00"
+    }
+  },
+  {
+    "model": "parcel_store.parcelstore",
+    "pk": 5,
+    "fields": {
+      "name": "Parcel Store in \"Chlebak\"",
+      "address": "Promienna 123, 20-202 Poznań, Polska",
+      "opening_hours": "6:00-23:00"
+    }
+  }
+]

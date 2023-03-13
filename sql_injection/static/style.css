@@ -10,3 +10,7 @@
 .parcel-store-container {
     margin: 50px;
 }
+
+#address-search-phrase {
+    width: 50%;
+}

